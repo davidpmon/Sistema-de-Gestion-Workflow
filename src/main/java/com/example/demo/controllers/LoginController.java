@@ -1,47 +1,25 @@
-package com.example.demo.controllers;//indicacion de que esta dentro de la carpeta controllers
+package com.example.demo.controllers;
 
-import com.example.demo.services.LoginService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-public class LoginController
-{
-
-    private final LoginService loginService;
-
-    public LoginController(LoginService loginService)
-    {
-        this.loginService = loginService;
-    }
+public class LoginController {
 
     @GetMapping("/login")
-    public String loginPage()
-    {
-        return "login"; // Thymeleaf buscará login.html
+    public String loginPage(Model model, String error, String logout) {
+        if (error != null) {
+            model.addAttribute("error", "Usuario o contraseña incorrectos");
+        }
+        if (logout != null) {
+            model.addAttribute("mensaje", "Sesión cerrada correctamente");
+        }
+        return "login"; // muestra login.html
     }
 
-    @PostMapping("/login")
-    public String login(@RequestParam String cedula,
-                        @RequestParam String contraseña,
-                        Model model)
-    {
-        return loginService.login(cedula, contraseña)
-                .map(user ->
-                {
-                    String rol = user.getRol().getNombreRol();
-                    switch (rol)
-                    {
-                        case "Administrador": return "redirect:/admin";
-                        case "Médico": return "redirect:/medico";
-                        case "Autorizador": return "redirect:/autorizador";
-                        case "Paciente": return "redirect:/paciente";
-                        default: return "login";
-                    }
-                })
-                .orElse("login");
+    @GetMapping("/home")
+    public String homePage() {
+        return "home"; // muestra home.html cuando el login es correcto
     }
 }
