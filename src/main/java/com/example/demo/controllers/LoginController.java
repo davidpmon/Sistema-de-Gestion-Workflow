@@ -22,4 +22,10 @@ public class LoginController {
     public String homePage() {
         return "home"; // muestra home.html cuando el login es correcto
     }
+
+    @GetMapping("/logout")
+    public String logout() {
+        // Redirige al login (simulación de cierre de sesión)
+        return "redirect:/login?logout=true";
+    }
 }
