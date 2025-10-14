@@ -55,7 +55,9 @@
                     <div class="carousel-caption text-start">
                         <h1>Bienvenido Administrador</h1>
                         <p class="opacity-75">Este es tu panel principal después de iniciar sesión.</p>
-                        <p><a class="btn btn-lg btn-primary" href="/logout">Cerrar sesión</a></p>
+                        <form th:action="@{/logout}" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-lg btn-primary">Cerrar sesión</button>
+                        </form>
                     </div>
                 </div>
             </div>
