@@ -1,15 +1,12 @@
 <!DOCTYPE html>
-
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Home · Sistema</title>
+    <title>Panel Médico · Sistema</title>
 
     <!-- Bootstrap local -->
-
     <link href="/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Estilos personalizados del carousel -->
     <link href="/css/carousel.css" rel="stylesheet">
 </head>
 <body>
@@ -23,13 +20,13 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="navbar-nav me-auto mb-2 mb-md-0">
-                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Enlace</a></li>
-                    <li class="nav-item"><a class="nav-link disabled" aria-disabled="true">Deshabilitado</a></li>
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" th:href="@{/medico/home}">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/medico/historial}">Historial clínico</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/medico/ordenes}">Órdenes médicas</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/medico/correcciones}">Corrección de órdenes</a></li>
                 </ul>
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Buscar" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Buscar</button>
+                <form class="d-flex" th:action="@{/logout}" method="post">
+                    <button class="btn btn-outline-danger" type="submit">Cerrar sesión</button>
                 </form>
             </div>
         </div>
@@ -42,8 +39,6 @@
         <div class="carousel-indicators">
             <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active"
                     aria-current="true" aria-label="Slide 1"></button>
-            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
         </div>
         <div class="carousel-inner">
             <div class="carousel-item active">
@@ -53,62 +48,48 @@
                 </svg>
                 <div class="container">
                     <div class="carousel-caption text-start">
-                        <h1>Bienvenido Médico</h1>
-                        <p class="opacity-75">Este es tu panel principal después de iniciar sesión.</p>
+                        <h1>Bienvenido, Doctor</h1>
+                        <p class="opacity-75">Seleccione un módulo para continuar con sus tareas.</p>
                         <form th:action="@{/logout}" method="post" style="display:inline;">
                             <button type="submit" class="btn btn-lg btn-primary">Cerrar sesión</button>
                         </form>
                     </div>
                 </div>
             </div>
-            <!-- Más slides si quieres -->
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Anterior</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Siguiente</span>
-        </button>
     </div>
 
-    ```
-    <!-- Sección marketing -->
-    <div class="container marketing">
-        <div class="row">
+    <!-- Sección módulos -->
+    <div class="container marketing mt-5">
+        <div class="row text-center">
             <div class="col-lg-4">
                 <h2 class="fw-normal">Módulo 1</h2>
-                <p>Sistema de autorizaciones.</p>
-                <p><a class="btn btn-secondary" href="#">Ver detalles &raquo;</a></p>
+                <p>Historial Clínico del paciente</p>
+                <p><a class="btn btn-secondary" th:href="@{/medico/historial}">Ver detalles &raquo;</a></p>
             </div>
+
             <div class="col-lg-4">
                 <h2 class="fw-normal">Módulo 2</h2>
-                <p>Documentación médica.</p>
-                <p><a class="btn btn-secondary" href="#">Ver detalles &raquo;</a></p>
+                <p>Creación y envío de órdenes médicas</p>
+                <p><a class="btn btn-secondary" th:href="@{/medico/ordenes}">Ver detalles &raquo;</a></p>
             </div>
+
             <div class="col-lg-4">
                 <h2 class="fw-normal">Módulo 3</h2>
-                <p>Creación y evio de solicitudes.</p>
-                <p><a class="btn btn-secondary" href="#">Ver detalles &raquo;</a></p>
+                <p>Corrección de órdenes médicas</p>
+                <p><a class="btn btn-secondary" th:href="@{/medico/correcciones}">Ver detalles &raquo;</a></p>
             </div>
         </div>
     </div>
 
     <hr class="featurette-divider">
 
-    <!-- Footer -->
-    <footer class="container">
+    <footer class="container text-center">
         <p class="float-end"><a href="#">Volver arriba</a></p>
-        <p>&copy; 2025 Mi Compañía &middot; <a href="#">Privacidad</a> &middot; <a href="#">Términos</a></p>
+        <p>&copy; 2025 Sistema de Autorizaciones Médicas &middot; <a href="#">Privacidad</a> &middot; <a href="#">Términos</a></p>
     </footer>
-    ```
-
 </main>
 
-<!-- Bootstrap JS local -->
-
 <script src="/js/bootstrap.bundle.min.js"></script>
-
 </body>
 </html>

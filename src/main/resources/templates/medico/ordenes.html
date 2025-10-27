@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Órdenes Médicas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand" href="#">Módulo Médico</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="/medico/historial/1">Historial Clínico</a></li>
+                <li class="nav-item"><a class="nav-link" href="/logout">Cerrar Sesión</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Contenido principal -->
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Órdenes Médicas</h2>
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalNuevaOrden">+ Nueva Orden</button>
+    </div>
+
+    <div class="card shadow">
+        <div class="card-body">
+            <table class="table table-striped align-middle">
+                <thead class="table-primary">
+                <tr>
+                    <th>Fecha</th>
+                    <th>Descripción</th>
+                    <th>Estado</th>
+                    <th>Acción</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="o : ${ordenes}">
+                    <td th:text="${o.fecha}">2025-10-26</td>
+                    <td th:text="${o.descripcion}">Orden de exámenes</td>
+                    <td th:text="${o.estado}">Pendiente</td>
+                    <td>
+                        <button class="btn btn-warning btn-sm"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modalCorreccion"
+                                th:data-id="${o.id_orden}">
+                            Corregir
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Nueva Orden -->
+<div class="modal fade" id="modalNuevaOrden" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form th:action="@{/medico/ordenes/nueva}" method="post">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">Crear Nueva Orden Médica</h5>
+                </div>
+                <div class="modal-body">
+                    <textarea class="form-control" name="descripcion" rows="4" placeholder="Escribe la orden..." required></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Corregir Orden -->
+<div class="modal fade" id="modalCorreccion" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form id="formCorreccion" method="post">
+                <div class="modal-header bg-warning">
+                    <h5 class="modal-title">Corregir Orden Médica</h5>
+                </div>
+                <div class="modal-body">
+                    <textarea class="form-control" name="descripcion" rows="4" placeholder="Escribe la corrección..." required></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-warning">Guardar Corrección</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Términos -->
+<div class="modal fade" id="modalTerminos" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Condiciones de Uso para Órdenes Médicas</h5>
+            </div>
+            <div class="modal-body">
+                <p>El envío de órdenes médicas implica responsabilidad sobre la información registrada.
+                    Asegúrese de que las órdenes estén correctamente justificadas y correspondan al diagnóstico clínico del paciente.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Mostrar el modal de términos al cargar la página
+    const modal = new bootstrap.Modal(document.getElementById('modalTerminos'));
+    window.addEventListener('load', () => modal.show());
+
+    // Enviar corrección con el ID dinámico
+    const correccionModal = document.getElementById('modalCorreccion');
+    correccionModal.addEventListener('show.bs.modal', event => {
+      const button = event.relatedTarget;
+      const id = button.getAttribute('data-id');
+      const form = document.getElementById('formCorreccion');
+      form.action = `/medico/ordenes/corregir/${id}`;
+    });
+</script>
+</body>
+</html>

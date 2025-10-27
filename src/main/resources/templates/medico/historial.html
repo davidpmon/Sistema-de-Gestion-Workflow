@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Historial Clínico</title>
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+    <h2 class="mb-4">Historial Clínico</h2>
+
+    <!-- Si no hay paciente seleccionado -->
+    <div th:if="${paciente == null}">
+        <p>Seleccione un paciente para ver su historial:</p>
+        <ul class="list-group">
+            <li th:each="p : ${pacientes}" class="list-group-item d-flex justify-content-between align-items-center">
+                <!-- Accedemos a los datos del usuario del paciente -->
+                <span th:text="${p.usuario.nombre + ' ' + p.usuario.apellido}"></span>
+                <!-- Usamos la sintaxis correcta para pasar el ID en la URL -->
+                <a th:href="@{/medico/historial/{idPaciente}(idPaciente=${p.idPaciente})}"
+                   class="btn btn-sm btn-primary">Ver historial</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Si ya hay paciente seleccionado -->
+    <div th:if="${paciente != null}">
+        <h4 th:text="'Paciente: ' + ${paciente.usuario.nombre} + ' ' + ${paciente.usuario.apellido}"></h4>
+        <p><strong>Documento:</strong> <span th:text="${paciente.numeroDocumento}"></span></p>
+        <p><strong>Teléfono:</strong> <span th:text="${paciente.telefono}"></span></p>
+
+        <hr>
+
+        <h5>Consultas registradas:</h5>
+        <table class="table table-striped mt-3">
+            <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Descripción</th>
+                <th>Diagnóstico</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="h : ${historias}">
+                <td th:text="${h.fecha}"></td>
+                <td th:text="${h.descripcion}"></td>
+                <td th:text="${h.diagnostico}"></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <a th:href="@{/medico/historial}" class="btn btn-secondary">Volver</a>
+    </div>
+</div>
+
+<script src="/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
