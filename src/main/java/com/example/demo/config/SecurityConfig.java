@@ -19,11 +19,16 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/css/**", "/js/**").permitAll()
+                        // Rutas públicas (no necesitan login)
+                        .requestMatchers("/", "/consultar", "/login", "/css/**", "/js/**", "/images/**", "/terminos/**").permitAll()
+
+                        // Rutas privadas (según rol)
                         .requestMatchers("/admin/**").hasRole("Administrador")
                         .requestMatchers("/medico/**").hasRole("Médico")
-                        .requestMatchers("/paciente/**").hasRole("Paciente")
                         .requestMatchers("/autorizador/**").hasRole("Autorizador")
+                        .requestMatchers("/paciente/**").hasRole("Paciente")
+
+                        // Todo lo demás requiere autenticación
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form

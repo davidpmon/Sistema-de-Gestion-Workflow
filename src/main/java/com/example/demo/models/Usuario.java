@@ -20,8 +20,8 @@ public class Usuario {
     @Column(nullable = false, unique = true, length = 9)
     private String cedula;
 
-    @Column(nullable = false, length = 4)
-    private String contraseña;
+    @Column(nullable = false, length = 255)
+    private String contraseña; 
 
     // Relación muchos usuarios → 1 rol
     @ManyToOne
