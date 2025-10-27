@@ -6,7 +6,6 @@
 
     <!-- 🔹 Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 
     <style>
@@ -15,6 +14,7 @@
             margin: 0;
             background-color: #f5f8fa;
         }
+
         header {
             background-color: #004aad;
             color: white;
@@ -23,10 +23,23 @@
             justify-content: space-between;
             align-items: center;
         }
+
+        /* 🔹 Logo y título alineados */
+        .logo-section {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-section img {
+            height: 90px;
+            margin-right: 15px;
+        }
+
         header h1 {
             margin: 0;
             font-size: 22px;
         }
+
         .btn-login {
             background-color: white;
             color: #004aad;
@@ -36,6 +49,7 @@
             cursor: pointer;
             font-weight: bold;
         }
+
         .container {
             max-width: 500px;
             margin: 60px auto;
@@ -45,6 +59,7 @@
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             text-align: center;
         }
+
         input[type="text"] {
             width: 90%;
             padding: 10px;
@@ -52,6 +67,7 @@
             border: 1px solid #ccc;
             border-radius: 5px;
         }
+
         button {
             margin-top: 15px;
             padding: 10px 20px;
@@ -75,10 +91,12 @@
             opacity: 0;
             transition: opacity 0.4s ease-in-out;
         }
+
         #modalTerminos.show {
             display: flex;
             opacity: 1;
         }
+
         #modalTerminos .modal-content {
             background: white;
             padding: 30px;
@@ -106,8 +124,12 @@
     </div>
 </div>
 
+<!-- 🔹 Encabezado con logo -->
 <header>
-    <h1>Sistema de Autorizaciones Médicas</h1>
+    <div class="logo-section">
+        <img th:src="@{/images/logo.png}" alt="Logo MASS">
+        <h1>Sistema de Autorizaciones Médicas</h1>
+    </div>
     <a th:href="@{/login}"><button class="btn-login">Ingreso funcionarios</button></a>
 </header>
 
@@ -129,16 +151,14 @@
         const btnAceptar = document.getElementById("btnAceptarTerminos");
         const acepto = localStorage.getItem("aceptoTerminos");
 
-        // Si no ha aceptado, mostrar modal
         if (!acepto) {
             modal.classList.add("show");
         }
 
-        // Al aceptar: guardar y eliminar el modal completamente
         btnAceptar.addEventListener("click", () => {
             localStorage.setItem("aceptoTerminos", "true");
             modal.classList.remove("show");
-            setTimeout(() => modal.remove(), 400); // 🔹 Elimina el overlay completamente
+            setTimeout(() => modal.remove(), 400);
         });
     });
 </script>
