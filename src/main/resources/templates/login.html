@@ -8,9 +8,19 @@
 <body class="bg-light d-flex justify-content-center align-items-center vh-100">
 
 <div class="card shadow p-4" style="width: 22rem;">
+
+    <!-- LOGO -->
+    <div class="text-center mb-3">
+        <img th:src="@{/images/mass.png}"
+             alt="Logo del sistema"
+             class="img-fluid"
+             style="max-width: 150px; height: auto;">
+
+    </div>
+
     <h3 class="text-center mb-4">Iniciar Sesión</h3>
 
-    <!-- Spring Security usa username y password por defecto -->
+    <!-- FORMULARIO -->
     <form th:action="@{/login}" method="post">
         <div class="mb-3">
             <label for="username" class="form-label">Usuario</label>
@@ -25,7 +35,7 @@
         </div>
     </form>
 
-    <!-- Mensajes de error o logout -->
+    <!-- MENSAJES -->
     <div class="text-danger mt-3" th:if="${error}">
         <p th:text="${error}"></p>
     </div>
