@@ -34,4 +34,9 @@ public class HomeController {
     public String autorizadorHome() {
         return "autorizador/home"; // templates/autorizador/home.html
     }
+   //esto no debe ir aqui
+   @GetMapping("/medico/terminos")
+    public String mostrarTerminosMedico() {
+        return "medico/terminos_medico"; // ruta dentro de templates
+    }
 }

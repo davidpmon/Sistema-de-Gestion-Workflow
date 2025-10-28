@@ -55,4 +55,8 @@ public class MedicoController {
         medicoService.corregirOrden(id, descripcion);
         return "redirect:/medico/ordenes";
     }
+    @GetMapping("/medico/terminos")
+    public String mostrarTerminosMedico() {
+        return "medico/terminos_medico"; // ruta dentro de templates
+    }
 }
