@@ -44,8 +44,18 @@ public class HomeController {
     public String terminosAdmin() {
         return "Admin/terminos";
     }
-    @GetMapping("/autorizador/terminos")
-    public String terminosAutorizador() {
-        return "/autorizador/terminos";
+    @GetMapping("/admin/home")
+    public String homeAdmin() {
+        return "admin/home";
     }
+    @GetMapping("/terminos/autorizador")
+    public String terminosAutorizador() {
+        return "autorizador/terminos";
+    }
+    @GetMapping("/autorizador/home")
+    public String homeAutorizador() {
+        return "autorizador/home";
+    }
+
+
 }
