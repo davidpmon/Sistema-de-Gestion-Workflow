@@ -40,9 +40,12 @@ public class HomeController {
         return "medico/terminos_medico"; // ruta dentro de templates
     }
 
-    @GetMapping("/terminos/autorizador")
-    public String terminosAutorizador() {
-        return "autorizador/terminos"; // templates/autorizador/terminos.html
+    @GetMapping("/terminos/admin")
+    public String terminosAdmin() {
+        return "Admin/terminos";
     }
-
+    @GetMapping("/autorizador/terminos")
+    public String terminosAutorizador() {
+        return "/autorizador/terminos";
+    }
 }
