@@ -17,7 +17,7 @@ public class MedicoController {
     @Autowired
     private MedicoService medicoService;
 
-    // ✅ Mostrar lista de pacientes o historial específico
+    // Mostrar lista de pacientes o historial específico
     @GetMapping("/historial")
     public String verHistorial(@RequestParam(value = "id", required = false) Integer idPaciente, Model model) {
         if (idPaciente != null) {
@@ -34,7 +34,7 @@ public class MedicoController {
         return "medico/historial";
     }
 
-    // ✅ Mostrar órdenes médicas del médico autenticado
+    // Mostrar órdenes médicas del médico autenticado
     @GetMapping("/ordenes")
     public String verOrdenes(@AuthenticationPrincipal Usuario medico, Model model) {
         List<OrdenMedica> ordenes = medicoService.obtenerOrdenesPorMedico(medico);
@@ -42,14 +42,14 @@ public class MedicoController {
         return "medico/ordenes";
     }
 
-    // ✅ Crear nueva orden
+    // Crear nueva orden
     @PostMapping("/ordenes/nueva")
     public String crearOrden(@ModelAttribute OrdenMedica orden) {
         medicoService.crearOrden(orden);
         return "redirect:/medico/ordenes";
     }
 
-    // ✅ Corregir orden existente
+    // Corregir orden existente
     @PostMapping("/ordenes/corregir/{id}")
     public String corregirOrden(@PathVariable Integer id, @RequestParam String descripcion) {
         medicoService.corregirOrden(id, descripcion);

@@ -20,7 +20,7 @@ public class MedicoService {
     @Autowired
     private PacienteRepository pacienteRepo;
 
-    // ✅ Listar historias clínicas de un paciente existente
+    // Listar historias clínicas de un paciente existente
     public List<HistoriaClinica> obtenerHistoriasPorPaciente(Integer idPaciente) {
         Optional<Paciente> pacienteOpt = pacienteRepo.findById(idPaciente);
         if (pacienteOpt.isPresent()) {
@@ -29,14 +29,14 @@ public class MedicoService {
         return List.of(); // retorna lista vacía si no existe el paciente
     }
 
-    // ✅ Crear nueva orden médica
+    // Crear nueva orden médica
     public OrdenMedica crearOrden(OrdenMedica orden) {
         orden.setEstado(OrdenMedica.EstadoOrden.PENDIENTE);
         orden.setFecha(LocalDateTime.now()); // 🔹 corregido: ahora coincide con LocalDateTime
         return ordenRepo.save(orden);
     }
 
-    // ✅ Corregir orden médica
+    // Corregir orden médica
     public OrdenMedica corregirOrden(Integer id, String nuevaDescripcion) {
         Optional<OrdenMedica> ordenOpt = ordenRepo.findById(id);
         if (ordenOpt.isPresent()) {
@@ -48,17 +48,17 @@ public class MedicoService {
         return null;
     }
 
-    // ✅ Listar órdenes por médico
+    // Listar órdenes por médico
     public List<OrdenMedica> obtenerOrdenesPorMedico(Usuario medico) {
         return ordenRepo.findByMedico(medico);
     }
 
-    // ✅ Listar todos los pacientes (para el historial)
+    // Listar todos los pacientes (para el historial)
     public List<Paciente> obtenerTodosLosPacientes() {
         return pacienteRepo.findAll();
     }
 
-    // ✅ Obtener un paciente por su ID
+    // Obtener un paciente por su ID
     public Paciente obtenerPacientePorId(Integer idPaciente) {
         return pacienteRepo.findById(idPaciente).orElse(null);
     }
