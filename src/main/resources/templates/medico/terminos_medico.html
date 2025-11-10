@@ -141,8 +141,12 @@
     </p>
 
     <div class="text-center mt-5">
-        <a href="/medico" class="btn btn-primary px-4">Volver</a>
+        <a href="#" class="btn btn-primary px-4"
+           onclick="if (document.referrer) { history.back(); } else { window.location.href='/medico'; } return false;">
+            Volver
+        </a>
     </div>
+
 </div>
 
 </body>
