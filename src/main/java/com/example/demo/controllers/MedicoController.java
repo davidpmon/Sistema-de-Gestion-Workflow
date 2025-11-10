@@ -8,7 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.*;
 
 @Controller
 @RequestMapping("/medico")
@@ -17,24 +17,50 @@ public class MedicoController {
     @Autowired
     private MedicoService medicoService;
 
-    // Mostrar lista de pacientes o historial específico
+    // Página inicial del historial clínico (lista de pacientes)
     @GetMapping("/historial")
-    public String verHistorial(@RequestParam(value = "id", required = false) Integer idPaciente, Model model) {
-        if (idPaciente != null) {
-            // 🔹 Mostrar historial de un paciente específico
-            List<HistoriaClinica> historias = medicoService.obtenerHistoriasPorPaciente(idPaciente);
-            Paciente paciente = medicoService.obtenerPacientePorId(idPaciente);
-            model.addAttribute("paciente", paciente);
-            model.addAttribute("historias", historias);
-        } else {
-            // 🔹 Mostrar lista de todos los pacientes disponibles
-            List<Paciente> pacientes = medicoService.obtenerTodosLosPacientes();
-            model.addAttribute("pacientes", pacientes);
-        }
+    public String verHistorial(Model model) {
+        List<Paciente> pacientes = medicoService.obtenerTodosLosPacientes();
+        model.addAttribute("pacientes", pacientes);
         return "medico/historial";
     }
 
-    // Mostrar órdenes médicas del médico autenticado
+    // Endpoint que devuelve los datos de historial de un paciente en formato JSON
+    @GetMapping("/historial/{idPaciente}/detalle")
+    @ResponseBody
+    public Map<String, Object> obtenerHistorialPaciente(@PathVariable Integer idPaciente) {
+        Map<String, Object> respuesta = new HashMap<>();
+
+        Paciente paciente = medicoService.obtenerPacientePorId(idPaciente);
+        if (paciente == null) {
+            respuesta.put("error", "Paciente no encontrado");
+            return respuesta;
+        }
+
+        List<HistoriaClinica> historias = medicoService.obtenerHistoriasPorPaciente(idPaciente);
+
+        List<Map<String, Object>> historiasDTO = historias.stream()
+                .sorted(Comparator.comparing(HistoriaClinica::getFecha).reversed())
+                .map(h -> {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("fecha", h.getFecha());
+                    map.put("descripcion", h.getDescripcion());
+                    map.put("diagnostico", h.getDiagnostico());
+                    return map;
+                })
+                .toList();
+
+        respuesta.put("paciente", Map.of(
+                "nombre", paciente.getUsuario().getNombre(),
+                "apellido", paciente.getUsuario().getApellido(),
+                "documento", paciente.getNumeroDocumento(),
+                "telefono", paciente.getTelefono()
+        ));
+        respuesta.put("historias", historiasDTO);
+
+        return respuesta;
+    }
+
     @GetMapping("/ordenes")
     public String verOrdenes(@AuthenticationPrincipal Usuario medico, Model model) {
         List<OrdenMedica> ordenes = medicoService.obtenerOrdenesPorMedico(medico);
@@ -42,21 +68,9 @@ public class MedicoController {
         return "medico/ordenes";
     }
 
-    // Crear nueva orden
     @PostMapping("/ordenes/nueva")
     public String crearOrden(@ModelAttribute OrdenMedica orden) {
         medicoService.crearOrden(orden);
         return "redirect:/medico/ordenes";
-    }
-
-    // Corregir orden existente
-    @PostMapping("/ordenes/corregir/{id}")
-    public String corregirOrden(@PathVariable Integer id, @RequestParam String descripcion) {
-        medicoService.corregirOrden(id, descripcion);
-        return "redirect:/medico/ordenes";
-    }
-    @GetMapping("/medico/terminos")
-    public String mostrarTerminosMedico() {
-        return "medico/terminos_medico"; // ruta dentro de templates
     }
 }

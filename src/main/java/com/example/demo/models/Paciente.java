@@ -38,6 +38,19 @@ public class Paciente {
     @OneToMany(mappedBy = "paciente", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<HistoriaClinica> historiasClinicas;
 
+    // Constructor vacío (importante para JPA)
+    public Paciente() {}
+
+    // Constructor para servicios o pruebas
+    public Paciente(String tipoDocumento, String numeroDocumento, LocalDate fechaNacimiento, String direccion, String telefono, String correo) {
+        this.tipoDocumento = tipoDocumento;
+        this.numeroDocumento = numeroDocumento;
+        this.fechaNacimiento = fechaNacimiento;
+        this.direccion = direccion;
+        this.telefono = telefono;
+        this.correo = correo;
+    }
+
     // Getters y Setters
     public Integer getIdPaciente() { return idPaciente; }
     public void setIdPaciente(Integer idPaciente) { this.idPaciente = idPaciente; }

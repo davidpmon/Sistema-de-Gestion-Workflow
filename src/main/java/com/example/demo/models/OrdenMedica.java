@@ -12,18 +12,18 @@ public class OrdenMedica {
     @Column(name = "id_orden")
     private Integer idOrden;
 
-    // 🔹 Relación con historia clínica (cada orden pertenece a una historia)
+    // Relación con historia clínica (cada orden pertenece a una historia)
     @ManyToOne
     @JoinColumn(name = "id_historia", nullable = false)
     private HistoriaClinica historia;
 
-    // 🔹 Relación con el médico que crea la orden (vinculado a usuarios)
+    // Relación con el médico que crea la orden (vinculado a usuarios)
     @ManyToOne
     @JoinColumn(name = "id_medico", nullable = false)
     private Usuario medico;
 
     @Column(name = "fecha", nullable = false)
-    private LocalDateTime fecha; // ✅ Guarda fecha y hora exacta
+    private LocalDateTime fecha; // Guarda fecha y hora exacta
 
     @Column(name = "descripcion", columnDefinition = "TEXT", nullable = false)
     private String descripcion;
@@ -32,7 +32,7 @@ public class OrdenMedica {
     @Column(name = "estado", nullable = false)
     private EstadoOrden estado = EstadoOrden.PENDIENTE;
 
-    // 🔹 Enumeración igual a la base de datos (sin tildes)
+    // Enumeración igual a la base de datos (sin tildes)
     public enum EstadoOrden {
         PENDIENTE,
         EN_REVISION,
@@ -41,9 +41,18 @@ public class OrdenMedica {
         CORREGIDA
     }
 
-    // ==============================================
+    // CONSTRUCTORES
+    public OrdenMedica() {}
+
+    public OrdenMedica(HistoriaClinica historia, Usuario medico, String descripcion) {
+        this.historia = historia;
+        this.medico = medico;
+        this.descripcion = descripcion;
+        this.fecha = LocalDateTime.now();
+        this.estado = EstadoOrden.PENDIENTE;
+    }
+
     // Getters y Setters
-    // ==============================================
     public Integer getIdOrden() {
         return idOrden;
     }

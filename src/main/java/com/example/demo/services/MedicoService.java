@@ -20,45 +20,31 @@ public class MedicoService {
     @Autowired
     private PacienteRepository pacienteRepo;
 
-    // Listar historias clínicas de un paciente existente
+    // Obtener todas las historias clínicas de un paciente
     public List<HistoriaClinica> obtenerHistoriasPorPaciente(Integer idPaciente) {
-        Optional<Paciente> pacienteOpt = pacienteRepo.findById(idPaciente);
-        if (pacienteOpt.isPresent()) {
-            return historiaRepo.findByPaciente(pacienteOpt.get());
-        }
-        return List.of(); // retorna lista vacía si no existe el paciente
+        return pacienteRepo.findById(idPaciente)
+                .map(historiaRepo::findByPaciente)
+                .orElse(List.of());
     }
 
     // Crear nueva orden médica
     public OrdenMedica crearOrden(OrdenMedica orden) {
         orden.setEstado(OrdenMedica.EstadoOrden.PENDIENTE);
-        orden.setFecha(LocalDateTime.now()); // 🔹 corregido: ahora coincide con LocalDateTime
+        orden.setFecha(LocalDateTime.now());
         return ordenRepo.save(orden);
     }
 
-    // Corregir orden médica
-    public OrdenMedica corregirOrden(Integer id, String nuevaDescripcion) {
-        Optional<OrdenMedica> ordenOpt = ordenRepo.findById(id);
-        if (ordenOpt.isPresent()) {
-            OrdenMedica orden = ordenOpt.get();
-            orden.setDescripcion(nuevaDescripcion);
-            orden.setEstado(OrdenMedica.EstadoOrden.CORREGIDA);
-            return ordenRepo.save(orden);
-        }
-        return null;
-    }
-
-    // Listar órdenes por médico
+    // Obtener todas las órdenes realizadas por un médico
     public List<OrdenMedica> obtenerOrdenesPorMedico(Usuario medico) {
         return ordenRepo.findByMedico(medico);
     }
 
-    // Listar todos los pacientes (para el historial)
+    // Obtener todos los pacientes
     public List<Paciente> obtenerTodosLosPacientes() {
         return pacienteRepo.findAll();
     }
 
-    // Obtener un paciente por su ID
+    // Obtener un paciente específico por ID
     public Paciente obtenerPacientePorId(Integer idPaciente) {
         return pacienteRepo.findById(idPaciente).orElse(null);
     }

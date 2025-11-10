@@ -10,50 +10,95 @@
 <div class="container mt-5">
     <h2 class="mb-4">Historial Clínico</h2>
 
-    <!-- Si no hay paciente seleccionado -->
-    <div th:if="${paciente == null}">
-        <p>Seleccione un paciente para ver su historial:</p>
-        <ul class="list-group">
-            <li th:each="p : ${pacientes}" class="list-group-item d-flex justify-content-between align-items-center">
-                <!-- Accedemos a los datos del usuario del paciente -->
-                <span th:text="${p.usuario.nombre + ' ' + p.usuario.apellido}"></span>
-                <!-- Usamos la sintaxis correcta para pasar el ID en la URL -->
-                <a th:href="@{/medico/historial/{idPaciente}(idPaciente=${p.idPaciente})}"
-                   class="btn btn-sm btn-primary">Ver historial</a>
-            </li>
-        </ul>
-    </div>
+    <p>Seleccione un paciente para ver su historial:</p>
+    <ul class="list-group">
+        <li th:each="p : ${pacientes}" class="list-group-item d-flex justify-content-between align-items-center">
+            <span th:text="${p.usuario.nombre + ' ' + p.usuario.apellido}"></span>
+            <button class="btn btn-primary btn-sm"
+                    th:attr="onclick='verHistorial(' + ${p.idPaciente} + ')'"
+                    type="button">
+                Ver historial
+            </button>
+        </li>
+    </ul>
+</div>
 
-    <!-- Si ya hay paciente seleccionado -->
-    <div th:if="${paciente != null}">
-        <h4 th:text="'Paciente: ' + ${paciente.usuario.nombre} + ' ' + ${paciente.usuario.apellido}"></h4>
-        <p><strong>Documento:</strong> <span th:text="${paciente.numeroDocumento}"></span></p>
-        <p><strong>Teléfono:</strong> <span th:text="${paciente.telefono}"></span></p>
-
-        <hr>
-
-        <h5>Consultas registradas:</h5>
-        <table class="table table-striped mt-3">
-            <thead>
-            <tr>
-                <th>Fecha</th>
-                <th>Descripción</th>
-                <th>Diagnóstico</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="h : ${historias}">
-                <td th:text="${h.fecha}"></td>
-                <td th:text="${h.descripcion}"></td>
-                <td th:text="${h.diagnostico}"></td>
-            </tr>
-            </tbody>
-        </table>
-
-        <a th:href="@{/medico/historial}" class="btn btn-secondary">Volver</a>
+<!-- Modal -->
+<div class="modal fade" id="historialModal" tabindex="-1" aria-labelledby="historialModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="historialModalLabel">Historial Clínico del Paciente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <div id="infoPaciente" class="mb-4">
+                    <p><strong>Nombre:</strong> <span id="nombrePaciente"></span></p>
+                    <p><strong>Documento:</strong> <span id="documentoPaciente"></span></p>
+                    <p><strong>Teléfono:</strong> <span id="telefonoPaciente"></span></p>
+                </div>
+                <h5>Consultas registradas</h5>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Descripción</th>
+                        <th>Diagnóstico</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tablaHistorias">
+                    <tr><td colspan="3" class="text-center text-muted">No hay registros</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 
 <script src="/js/bootstrap.bundle.min.js"></script>
+<script>
+    async function verHistorial(idPaciente) {
+        try {
+            const response = await fetch(`/medico/historial/${idPaciente}/detalle`);
+            const data = await response.json();
+
+            if (data.error) {
+                alert(data.error);
+                return;
+            }
+
+            // Mostrar datos del paciente
+            document.getElementById("nombrePaciente").textContent = data.paciente.nombre + " " + data.paciente.apellido;
+            document.getElementById("documentoPaciente").textContent = data.paciente.documento;
+            document.getElementById("telefonoPaciente").textContent = data.paciente.telefono;
+
+            // Llenar la tabla de historias
+            const tbody = document.getElementById("tablaHistorias");
+            tbody.innerHTML = "";
+
+            if (data.historias && data.historias.length > 0) {
+                data.historias.forEach(h => {
+                    const fila = document.createElement("tr");
+                    fila.innerHTML = `
+                        <td>${h.fecha}</td>
+                        <td>${h.descripcion}</td>
+                        <td>${h.diagnostico}</td>
+                    `;
+                    tbody.appendChild(fila);
+                });
+            } else {
+                tbody.innerHTML = '<tr><td colspan="3" class="text-center text-muted">No hay registros</td></tr>';
+            }
+
+            // Mostrar el modal
+            const modal = new bootstrap.Modal(document.getElementById('historialModal'));
+            modal.show();
+
+        } catch (error) {
+            console.error("Error al cargar historial:", error);
+            alert("Error al cargar el historial del paciente");
+        }
+    }
+</script>
 </body>
 </html>
