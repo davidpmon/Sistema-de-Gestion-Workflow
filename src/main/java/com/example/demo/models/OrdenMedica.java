@@ -17,10 +17,20 @@ public class OrdenMedica {
     @JoinColumn(name = "id_historia", nullable = false)
     private HistoriaClinica historia;
 
+    // Relacion de orden con paciente
+    @ManyToOne
+    @JoinColumn(name ="id_paciente")
+    private Paciente paciente;
+
     // Relación con el médico que crea la orden (vinculado a usuarios)
     @ManyToOne
     @JoinColumn(name = "id_medico", nullable = false)
     private Usuario medico;
+
+    //utilizable a largo plazo
+    /*@ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_paciente", nullable = false)
+    private Paciente paciente;*/
 
     @Column(name = "fecha", nullable = false)
     private LocalDateTime fecha; // Guarda fecha y hora exacta
@@ -31,6 +41,8 @@ public class OrdenMedica {
     @Enumerated(EnumType.STRING)
     @Column(name = "estado", nullable = false)
     private EstadoOrden estado = EstadoOrden.PENDIENTE;
+
+
 
     // Enumeración igual a la base de datos (sin tildes)
     public enum EstadoOrden {
@@ -53,6 +65,11 @@ public class OrdenMedica {
     }
 
     // Getters y Setters
+    public void setPaciente(Paciente paciente) {}
+
+    public Paciente getPaciente() {
+        return paciente;
+    }
     public Integer getIdOrden() {
         return idOrden;
     }

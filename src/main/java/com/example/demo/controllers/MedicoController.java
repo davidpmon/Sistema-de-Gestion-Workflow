@@ -2,8 +2,9 @@ package com.example.demo.controllers;
 
 import com.example.demo.models.*;
 import com.example.demo.services.MedicoService;
+import java.util.List;
+import com.example.demo.repositories.HistoriaClinicaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,8 @@ import java.util.*;
 @Controller
 @RequestMapping("/medico")
 public class MedicoController {
+    @Autowired
+    private HistoriaClinicaRepository historiaClinicaRepository;
 
     @Autowired
     private MedicoService medicoService;
@@ -60,17 +63,23 @@ public class MedicoController {
 
         return respuesta;
     }
+   /* @GetMapping("/ordenes")
+    public String listarOrdenes(Model model) {
+        List<HistoriaClinica> historias = historiaClinicaRepository.buscarConPacienteYUsuario();
+        model.addAttribute("historias", historias);
+        return "medico/ordenes";
+    }*/
 
-    @GetMapping("/ordenes")
+   /*@GetMapping("/ordenes")
     public String verOrdenes(@AuthenticationPrincipal Usuario medico, Model model) {
         List<OrdenMedica> ordenes = medicoService.obtenerOrdenesPorMedico(medico);
         model.addAttribute("ordenes", ordenes);
         return "medico/ordenes";
-    }
+    }*/
 
-    @PostMapping("/ordenes/nueva")
+    /*@PostMapping("/ordenes/nueva")
     public String crearOrden(@ModelAttribute OrdenMedica orden) {
         medicoService.crearOrden(orden);
         return "redirect:/medico/ordenes";
-    }
+    }*/
 }

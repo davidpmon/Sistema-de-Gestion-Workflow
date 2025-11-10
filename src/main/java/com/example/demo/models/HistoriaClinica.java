@@ -13,7 +13,7 @@ public class HistoriaClinica {
     @Column(name = "id_historia")
     private Integer idHistoria;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_paciente", nullable = false)
     private Paciente paciente;
 

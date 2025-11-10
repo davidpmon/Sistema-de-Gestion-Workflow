@@ -137,14 +137,14 @@
                 </thead>
                 <tbody>
                 <tr th:each="o : ${ordenes}">
-                    <td th:text="${#dates.format(o.fecha, 'dd/MM/yyyy HH:mm')}">2025-10-26</td>
+                    <td th:text="${#temporals.format(o.fecha, 'dd/MM/yyyy HH:mm')}"></td>
                     <td th:text="${o.descripcion}">Orden de exámenes</td>
                     <td th:text="${o.estado}">Pendiente</td>
                     <td>
                         <button class="btn btn-warning btn-sm"
                                 data-bs-toggle="modal"
                                 data-bs-target="#modalCorreccion"
-                                th:data-id="${o.id_orden}">
+                                th:data-id="${o.idOrden}">
                             Corregir
                         </button>
                     </td>
@@ -155,34 +155,47 @@
     </div>
 </div>
 
-<!-- Modal: Nueva Orden -->
+<!-- Modal: Nueva Orden Médica -->
 <div class="modal fade" id="modalNuevaOrden" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content shadow-sm border-0 rounded-4">
             <form th:action="@{/medico/ordenes/nueva}" method="post" id="formNuevaOrden">
-                <div class="modal-header bg-success text-white">
-                    <h5 class="modal-title">Crear Nueva Orden Médica</h5>
+                <div class="modal-header bg-primary text-white rounded-top-4">
+                    <h5 class="modal-title fw-bold">Nueva Orden Médica</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
 
-                <div class="modal-body">
-                    <textarea class="form-control mb-3" name="descripcion" rows="4"
-                              placeholder="Escribe la orden..." required></textarea>
+                <div class="modal-body p-4">
+                    <!-- ID Historia Clínica -->
+                    <div class="mb-3">
+                        <label for="id_historia" class="form-label fw-semibold">ID de Historia Clínica</label>
+                        <input type="number" name="id_historia" id="id_historia" class="form-control"
+                               placeholder="Ingrese el ID de la historia clínica" required>
+                        <div id="infoHistoria" class="mt-2" style="font-size: 0.9rem;"></div>
+                    </div>
 
-                    <div class="form-check bg-light p-3 rounded border">
+                    <!-- Descripción -->
+                    <div class="mb-3">
+                        <label for="descripcion" class="form-label fw-semibold">Descripción de la orden</label>
+                        <textarea name="descripcion" id="descripcion" class="form-control" rows="4"
+                                  placeholder="Describa la orden médica..." required></textarea>
+                    </div>
+
+                    <!-- Términos -->
+                    <div class="form-check p-3 mb-3 rounded-3 border border-secondary bg-light">
                         <input class="form-check-input" type="checkbox" id="aceptaTerminosMedico" required>
-                        <label class="form-check-label" for="aceptaTerminosMedico">
+                        <label class="form-check-label" for="aceptaTerminosMedico" style="font-size: 0.9rem;">
                             Confirmo que he leído y acepto los
-                            <a href="/medico/terminos" target="_blank" class="text-primary text-decoration-underline">
-                                <strong>Términos y Condiciones de Uso Profesional Médico de MASS</strong>
+                            <a href="/medico/terminos" target="_blank" class="text-primary text-decoration-underline fw-bold">
+                                Términos y Condiciones de Uso Profesional Médico de MASS
                             </a>
                             y asumo la responsabilidad ética, legal y profesional sobre la información registrada en esta orden médica.
                         </label>
                     </div>
                 </div>
 
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-success">Guardar</button>
+                <div class="modal-footer border-0 p-3">
+                    <button type="submit" class="btn btn-primary w-100 fw-bold py-2">Crear Orden Médica</button>
                 </div>
             </form>
         </div>
@@ -260,6 +273,42 @@
         if (!check.checked) {
             e.preventDefault();
             alert("Debe aceptar los Términos y Condiciones de Uso Profesional Médico antes de guardar la orden médica.");
+        }
+    });
+</script>
+<script>
+    const inputHistoria = document.getElementById("id_historia");
+    const infoDiv = document.getElementById("infoHistoria");
+
+    inputHistoria.addEventListener("change", async () => {
+        const id = inputHistoria.value.trim();
+        if (!id) {
+            infoDiv.innerHTML = "";
+            return;
+        }
+
+        try {
+            const response = await fetch(`/medico/ordenes/buscar-historia/${id}`);
+            if (!response.ok) {
+                infoDiv.innerHTML = "<span class='text-danger'>Historia no encontrada.</span>";
+                return;
+            }
+
+            const historia = await response.json();
+            if (historia) {
+                infoDiv.innerHTML = `
+                    <div class="alert alert-info p-2 mt-2">
+                        <strong>Paciente:</strong> ${historia.nombrePaciente} ${historia.apellidoPaciente}<br>
+                        <strong>Documento:</strong> ${historia.documento}<br>
+                        <strong>Fecha de nacimiento:</strong> ${historia.fechaNacimiento || "N/A"}
+                    </div>
+                `;
+            } else {
+                infoDiv.innerHTML = "<span class='text-warning'>⚠️ No se pudieron obtener los datos del paciente.</span>";
+            }
+        } catch (err) {
+            console.error(err);
+            infoDiv.innerHTML = "<span class='text-danger'>Error al consultar la historia clínica.</span>";
         }
     });
 </script>
