@@ -1,27 +1,19 @@
 package com.example.demo.controllers;
+
 import com.example.demo.dto.HistoriaClinicaDTO;
-import com.example.demo.models.Paciente;
-import com.example.demo.models.OrdenMedica;
-import com.example.demo.models.Usuario;
-import com.example.demo.models.HistoriaClinica;
-import com.example.demo.repositories.OrdenMedicaRepository;
-import com.example.demo.repositories.PacienteRepository;
-import com.example.demo.repositories.UsuarioRepository;
-import com.example.demo.repositories.HistoriaClinicaRepository;
-
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
+import com.example.demo.models.*;
+import com.example.demo.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/medico/ordenes")
@@ -54,34 +46,10 @@ public class OrdenMedicaController {
 
         model.addAttribute("ordenes", ordenes);
         model.addAttribute("historias", historias);
-        return "medico/ordenes"; // plantilla HTML
-    }
-    // Buscar historia clínica por ID (para autocompletar)
-    @GetMapping("/buscar-historia/{id}")
-    @ResponseBody
-    public ResponseEntity<?> obtenerHistoria(@PathVariable Integer id) {
-        var historia = historiaRepo.findById(id).orElse(null);
-
-        if (historia == null) {
-            return ResponseEntity.status(404).body("Historia clínica no encontrada");
-        }
-
-        var paciente = historia.getPaciente();
-        var usuario = paciente.getUsuario();
-
-        var dto = new HistoriaClinicaDTO(
-                historia.getIdHistoria(),
-                usuario.getNombre(),
-                usuario.getApellido(),
-                paciente.getNumeroDocumento(),
-                paciente.getFechaNacimiento()
-        );
-
-        return ResponseEntity.ok(dto);
+        return "medico/ordenes"; // plantilla HTML de creación de órdenes
     }
 
-
-    // Crear nueva orden medica
+    // Crear nueva orden médica
     @PostMapping("/nueva")
     public String crearOrden(
             @RequestParam("descripcion") String descripcion,
@@ -96,20 +64,12 @@ public class OrdenMedicaController {
             return "redirect:/medico/ordenes?error";
         }
 
-
-        Paciente paciente = historia.getPaciente();//traemos el paciente desde la historia
+        Paciente paciente = historia.getPaciente();
 
         if (paciente == null) {
             System.out.println("La historia clínica no tiene paciente asociado.");
             return "redirect:/medico/ordenes?errorPaciente";
         }
-
-        // Verificacion
-        System.out.println("Paciente cargado correctamente: " + paciente.getIdPaciente());
-        System.out.println("Paciente desde historia: " + historia.getPaciente().getIdPaciente());
-
-        System.out.println("Paciente a asignar: " + paciente);
-
 
         OrdenMedica orden = new OrdenMedica();
         orden.setDescripcion(descripcion);
@@ -118,10 +78,48 @@ public class OrdenMedicaController {
         orden.setMedico(medico);
         orden.setHistoria(historia);
         orden.setPaciente(paciente);
-        System.out.println("Paciente asignado en orden: " + orden.getPaciente());
-        ordenRepo.save(orden);
-        System.out.println("Paciente asignado en orden: " + orden.getPaciente());
 
-        return "redirect:/medico/ordenes?success";
+        ordenRepo.save(orden);
+        System.out.println("Orden médica creada con paciente ID: " + paciente.getIdPaciente());
+
+        return "redirect:/medico/ordenes/historial-ordenes?success";
+    }
+
+    // Mostrar historial de órdenes médicas del médico logueado
+    @GetMapping("/historial-ordenes")
+    public String verHistorialOrdenes(Model model, Authentication authentication) {
+        String cedula = authentication.getName();
+        Usuario medico = usuarioRepo.findByCedula(cedula).orElse(null);
+
+        if (medico == null) {
+            return "redirect:/login?errorUsuarioNoEncontrado";
+        }
+
+        List<OrdenMedica> ordenes = ordenRepo.findByMedico(medico);
+        model.addAttribute("ordenes", ordenes);
+
+        return "medico/historial-ordenes";
+    }
+
+    // Devuelve los detalles de una orden médica como JSON
+    @GetMapping("/{id}/detalle")
+    @ResponseBody
+    public Map<String, Object> obtenerDetalleOrden(@PathVariable Integer id) {
+        Map<String, Object> data = new HashMap<>();
+        OrdenMedica orden = ordenRepo.findById(id).orElse(null);
+
+        if (orden != null) {
+            data.put("id", orden.getIdOrden());
+            data.put("fecha", orden.getFecha());
+            data.put("descripcion", orden.getDescripcion());
+            data.put("estado", orden.getEstado());
+            data.put("paciente", orden.getPaciente().getUsuario().getNombre() + " " +
+                    orden.getPaciente().getUsuario().getApellido());
+            data.put("diagnostico", orden.getHistoria().getDiagnostico());
+        } else {
+            data.put("error", "Orden no encontrada");
+        }
+
+        return data;
     }
 }

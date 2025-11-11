@@ -123,7 +123,7 @@
                     <li class="nav-item"><a class="nav-link active" aria-current="page" th:href="@{/medico/home}">Inicio</a></li>
                     <li class="nav-item"><a class="nav-link" th:href="@{/medico/historial}">Historial clínico</a></li>
                     <li class="nav-item"><a class="nav-link" th:href="@{/medico/ordenes}">Órdenes médicas</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/medico/historial-ordenes}">Historial de órdenes</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/medico/ordenes/historial-ordenes}">Historial de órdenes</a></li>
                 </ul>
                 <form class="d-flex ms-md-3" th:action="@{/logout}" method="post">
                     <button class="btn btn-outline-light" type="submit">Cerrar sesión</button>
@@ -164,7 +164,7 @@
             <div class="col-lg-4">
                 <h2 class="fw-normal">Historial de Órdenes</h2>
                 <p>Realice seguimiento de órdenes médicas.</p>
-                <p><a class="btn btn-secondary px-4" th:href="@{/medico/historial-ordenes}">Ver detalles &raquo;</a></p>
+                <p><a class="btn btn-secondary px-4" th:href="@{/medico/ordenes/historial-ordenes}">Ver detalles &raquo;</a></p>
             </div>
         </div>
     </div>
