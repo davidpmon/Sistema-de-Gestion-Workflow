@@ -76,7 +76,6 @@ public class OrdenMedica {
     public Integer getIdOrden() {
         return idOrden;
     }
-
     public void setIdOrden(Integer idOrden) {
         this.idOrden = idOrden;
     }

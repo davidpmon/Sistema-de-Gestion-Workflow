@@ -130,6 +130,7 @@
             <table class="table table-striped align-middle">
                 <thead class="table-primary">
                 <tr>
+                    <th>ID</th>
                     <th>Fecha</th>
                     <th>Descripción</th>
                     <th>Estado</th>
@@ -138,6 +139,7 @@
                 </thead>
                 <tbody>
                 <tr th:each="o : ${ordenes}">
+                    <td th:text="${o.idOrden}"></td>
                     <td th:text="${#temporals.format(o.fecha, 'dd/MM/yyyy HH:mm')}"></td>
                     <td th:text="${o.descripcion}">Orden de exámenes</td>
                     <td th:text="${o.estado}">Pendiente</td>
@@ -245,6 +247,24 @@
 <div class="text-center mt-4">
     <a href="javascript:history.back()" class="btn btn-primary px-4">Volver</a>
 </div>
+<!-- Modal: Orden Creada -->
+<div class="modal fade" id="modalOrdenCreada" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">Orden Creada</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <p>La orden médica ha sido creada exitosamente.</p>
+                <p>ID de la orden: <strong id="ordenId"></strong></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Footer -->
 <footer class="text-center py-4">
@@ -309,7 +329,7 @@
                     </div>
                 `;
             } else {
-                infoDiv.innerHTML = "<span class='text-warning'>⚠️ No se pudieron obtener los datos del paciente.</span>";
+                infoDiv.innerHTML = "<span class='text-warning'> No se pudieron obtener los datos del paciente.</span>";
             }
         } catch (err) {
             console.error(err);
@@ -317,6 +337,29 @@
         }
     });
 </script>
+<script>
+    // ---------- Modal de Orden Creada ----------
+    window.addEventListener('load', () => {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("success") && params.get("id")) {
+            // Esperar a que se cierre el modal de términos antes de mostrar este
+            const modalTerminosEl = document.getElementById('modalTerminos');
+            const ordenModalEl = document.getElementById('modalOrdenCreada');
 
+            const mostrarOrden = () => {
+                const modalOrden = new bootstrap.Modal(ordenModalEl);
+                modalOrden.show();
+            };
+
+            if (modalTerminosEl.classList.contains('show')) {
+                // Si el modal de términos está abierto, esperar a que se cierre
+                modalTerminosEl.addEventListener('hidden.bs.modal', mostrarOrden, { once: true });
+            } else {
+                // Si ya está cerrado, mostrar directamente
+                mostrarOrden();
+            }
+        }
+    });
+</script>
 </body>
 </html>

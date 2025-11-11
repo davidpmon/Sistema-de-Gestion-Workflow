@@ -80,9 +80,10 @@ public class OrdenMedicaController {
         orden.setPaciente(paciente);
 
         ordenRepo.save(orden);
+        Integer idGenerado = orden.getIdOrden();
         System.out.println("Orden médica creada con paciente ID: " + paciente.getIdPaciente());
 
-        return "redirect:/medico/ordenes/historial-ordenes?success";
+        return "redirect:/medico/ordenes?success&id=" + idGenerado;
     }
 
     // Mostrar historial de órdenes médicas del médico logueado
@@ -99,6 +100,30 @@ public class OrdenMedicaController {
         model.addAttribute("ordenes", ordenes);
 
         return "medico/historial-ordenes";
+    }
+
+    // Buscar historia clínica por ID para la creacion de ordenes
+    @GetMapping("/buscar-historia/{id}")
+    @ResponseBody
+    public ResponseEntity<?> obtenerHistoria(@PathVariable Integer id) {
+        var historia = historiaRepo.findById(id).orElse(null);
+
+        if (historia == null) {
+            return ResponseEntity.status(404).body("Historia clínica no encontrada");
+        }
+
+        var paciente = historia.getPaciente();
+        var usuario = paciente.getUsuario();
+
+        var dto = new HistoriaClinicaDTO(
+                historia.getIdHistoria(),
+                usuario.getNombre(),
+                usuario.getApellido(),
+                paciente.getNumeroDocumento(),
+                paciente.getFechaNacimiento()
+        );
+
+        return ResponseEntity.ok(dto);
     }
 
     // Devuelve los detalles de una orden médica como JSON
