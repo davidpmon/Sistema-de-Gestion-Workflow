@@ -19,7 +19,7 @@ public class OrdenMedica {
 
     // Relacion de orden con paciente
     @ManyToOne
-    @JoinColumn(name ="id_paciente")
+    @JoinColumn(name = "id_paciente", nullable = false)
     private Paciente paciente;
 
     // Relación con el médico que crea la orden (vinculado a usuarios)
@@ -56,16 +56,19 @@ public class OrdenMedica {
     // CONSTRUCTORES
     public OrdenMedica() {}
 
-    public OrdenMedica(HistoriaClinica historia, Usuario medico, String descripcion) {
+    public OrdenMedica(HistoriaClinica historia, Usuario medico, Paciente paciente, String descripcion) {
         this.historia = historia;
         this.medico = medico;
+        this.paciente = paciente;
         this.descripcion = descripcion;
         this.fecha = LocalDateTime.now();
         this.estado = EstadoOrden.PENDIENTE;
     }
 
     // Getters y Setters
-    public void setPaciente(Paciente paciente) {}
+    public void setPaciente(Paciente paciente) {
+        this.paciente = paciente;
+    }
 
     public Paciente getPaciente() {
         return paciente;

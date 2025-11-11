@@ -132,7 +132,7 @@
                     <th>Fecha</th>
                     <th>Descripción</th>
                     <th>Estado</th>
-                    <th>Acción</th>
+                   <!-- <th>Acción</th> -->
                 </tr>
                 </thead>
                 <tbody>
@@ -140,14 +140,14 @@
                     <td th:text="${#temporals.format(o.fecha, 'dd/MM/yyyy HH:mm')}"></td>
                     <td th:text="${o.descripcion}">Orden de exámenes</td>
                     <td th:text="${o.estado}">Pendiente</td>
-                    <td>
+                    <!--<td>
                         <button class="btn btn-warning btn-sm"
                                 data-bs-toggle="modal"
                                 data-bs-target="#modalCorreccion"
                                 th:data-id="${o.idOrden}">
                             Corregir
                         </button>
-                    </td>
+                    </td>-->
                 </tr>
                 </tbody>
             </table>

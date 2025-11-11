@@ -5,6 +5,7 @@ import com.example.demo.models.OrdenMedica;
 import com.example.demo.models.Usuario;
 import com.example.demo.models.HistoriaClinica;
 import com.example.demo.repositories.OrdenMedicaRepository;
+import com.example.demo.repositories.PacienteRepository;
 import com.example.demo.repositories.UsuarioRepository;
 import com.example.demo.repositories.HistoriaClinicaRepository;
 
@@ -35,6 +36,9 @@ public class OrdenMedicaController {
     @Autowired
     private HistoriaClinicaRepository historiaRepo;
 
+    @Autowired
+    private PacienteRepository pacienteRepo;
+
     // Mostrar lista de órdenes del médico logueado
     @GetMapping
     public String listarOrdenes(Model model, Authentication authentication) {
@@ -50,7 +54,7 @@ public class OrdenMedicaController {
 
         model.addAttribute("ordenes", ordenes);
         model.addAttribute("historias", historias);
-        return "medico/ordenes"; // tu plantilla HTML
+        return "medico/ordenes"; // plantilla HTML
     }
     // Buscar historia clínica por ID (para autocompletar)
     @GetMapping("/buscar-historia/{id}")
@@ -77,7 +81,7 @@ public class OrdenMedicaController {
     }
 
 
-    // Crear nueva orden médica
+    // Crear nueva orden medica
     @PostMapping("/nueva")
     public String crearOrden(
             @RequestParam("descripcion") String descripcion,
@@ -93,10 +97,18 @@ public class OrdenMedicaController {
         }
 
 
-        Paciente paciente = historia.getPaciente(); //traemos el paciente desde la historia
+        Paciente paciente = historia.getPaciente();//traemos el paciente desde la historia
+
+        if (paciente == null) {
+            System.out.println("La historia clínica no tiene paciente asociado.");
+            return "redirect:/medico/ordenes?errorPaciente";
+        }
+
+        // Verificacion
+        System.out.println("Paciente cargado correctamente: " + paciente.getIdPaciente());
+        System.out.println("Paciente desde historia: " + historia.getPaciente().getIdPaciente());
 
         System.out.println("Paciente a asignar: " + paciente);
-        System.out.println("Paciente ID: " + (paciente != null ? paciente.getIdPaciente() : "null"));
 
 
         OrdenMedica orden = new OrdenMedica();
@@ -106,7 +118,7 @@ public class OrdenMedicaController {
         orden.setMedico(medico);
         orden.setHistoria(historia);
         orden.setPaciente(paciente);
-
+        System.out.println("Paciente asignado en orden: " + orden.getPaciente());
         ordenRepo.save(orden);
         System.out.println("Paciente asignado en orden: " + orden.getPaciente());
 
