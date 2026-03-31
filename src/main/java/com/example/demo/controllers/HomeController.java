@@ -1,5 +1,6 @@
 package com.example.demo.controllers;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -20,24 +21,19 @@ public class HomeController {
         return "admin/home"; // templates/admin/home.html
     }
 
-    @GetMapping("/medico")
-    public String medicoHome() {
-        return "medico/home"; // templates/medico/home.html
+    @GetMapping("/editor")
+    public String editorHome() {
+        return "editor/home"; // templates/editor/home.html
     }
 
-    @GetMapping("/paciente")
-    public String pacienteHome() {
-        return "paciente/home"; // templates/paciente/home.html
+    @GetMapping("/supervisor")
+    public String supervisorHome() {
+        return "supervisor/home"; // templates/supervisor/home.html
     }
-
-    @GetMapping("/autorizador")
-    public String autorizadorHome() {
-        return "autorizador/home"; // templates/autorizador/home.html
-    }
-   //esto no debe ir aqui
-   @GetMapping("/medico/terminos")
-    public String mostrarTerminosMedico() {
-        return "medico/terminos_medico"; // ruta dentro de templates
+   //revision futura
+   @GetMapping("/editor/terminos")
+    public String mostrarTerminosEditor() {
+        return "editor/terminos_medico"; // ruta dentro de templates
     }
 
     @GetMapping("/terminos/admin")
@@ -48,14 +44,16 @@ public class HomeController {
     public String homeAdmin() {
         return "admin/home";
     }
-    @GetMapping("/terminos/autorizador")
-    public String terminosAutorizador() {
-        return "autorizador/terminos";
+    @GetMapping("/terminos/supervisor")
+    public String terminosSupervisor() {
+        return "supervisor/terminos";
     }
-    @GetMapping("/autorizador/home")
-    public String homeAutorizador() {
-        return "autorizador/home";
+    @GetMapping("/403")
+    public String accesoDenegado() {
+        return "index"; // 403.html
     }
-
-
+    /*@GetMapping("/supervisor/home")
+    public String homeSupervisor() {
+        return "supervisor/home";
+    }*/
 }

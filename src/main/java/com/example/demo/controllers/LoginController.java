@@ -10,26 +10,29 @@ public class LoginController {
 
     @GetMapping("/login")
     public String loginPage(Model model, String error, String logout, Authentication authentication) {
+        //ESTO YA LO HACE en el securityconfig y el customsuucesshandler pero se ejecuta despues para evitar que los usuarios
+        //puedan logearse despues de ya estar logeados sin cerrar sesion
         if(authentication != null && authentication.isAuthenticated()){
             var roles = authentication.getAuthorities();
 
             //funciones lambda: funciones anonimas las cuales podemos implementar sin darle nombre
             // dado un parámetro r (que representa un rol del usuario),
             // devuelve true si r.getAuthority() es igual a "ROLE_Administrador"; de lo contrario, devuelve false.
-            if(roles.stream().anyMatch(r-> r.getAuthority().equals("ROLE_Administrador")))
+            if(roles.stream().anyMatch(r-> r.getAuthority().equals("ROLE_ADMIN")))
             {
                 return "redirect:/admin";
             }
-            else if(roles.stream().anyMatch(r-> r.getAuthority().equals("ROLE_Médico")))
+            else if(roles.stream().anyMatch(r-> r.getAuthority().equals("ROLE_EDITOR")))
             {
-                return "redirect:/medico";
+                return "redirect:/editor";
             }
-            else if(roles.stream().anyMatch(r-> r.getAuthority().equals("ROLE_Autorizador")))
+            else if(roles.stream().anyMatch(r-> r.getAuthority().equals("ROLE_SUPERVISOR")))
             {
-                return "redirect:/autorizador";
+                return "redirect:/supervisor";
             }
             return "redirect:/home";
         }
+
         if (error != null) {
             model.addAttribute("error", "Usuario o contraseña incorrectos");
         }
@@ -38,15 +41,9 @@ public class LoginController {
         }
         return "login"; // muestra login.html
     }
-
-    @GetMapping("/home")
-    public String homePage() {
-        return "home"; // muestra home.html cuando el login es correcto
-    }
-
     @GetMapping("/logout")
     public String logout() {
-        // Redirige al login (simulación de cierre de sesión)
+        // Redirige al login
         return "redirect:/login?logout=true";
     }
 }

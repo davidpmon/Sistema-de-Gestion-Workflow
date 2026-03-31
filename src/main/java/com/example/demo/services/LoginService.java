@@ -15,7 +15,7 @@ public class LoginService {
     }
 
     public Optional<Usuario> login(String cedula, String contraseña) {
-        return usuarioRepository.findByCedula(cedula)
+        return usuarioRepository.findByUsuario(cedula)
                 .filter(u -> u.getContraseña().equals(contraseña));
     }
 }

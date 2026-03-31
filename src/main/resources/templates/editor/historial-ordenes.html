@@ -12,15 +12,15 @@
 <header>
     <nav class="navbar navbar-expand-md navbar-dark" style="background-color: #004aad;">
         <div class="container-fluid">
-            <a class="navbar-brand d-flex align-items-center" th:href="@{/medico}">
+            <a class="navbar-brand d-flex align-items-center" th:href="@{/templates/editor}">
                 <img th:src="@{/images/logo.png}" alt="Logo MASS" style="height: 40px; margin-right: 10px;">
                 MASS - Módulo Médico
             </a>
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" th:href="@{/medico/historial}">Historial Clínico</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/medico/ordenes}">Órdenes Médicas</a></li>
-                    <li class="nav-item"><a class="nav-link active" th:href="@{/medico/ordenes/historial-ordenes}">Historial de Órdenes</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/templates/editor/historial}">Historial Clínico</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/templates/editor/ordenes}">Órdenes Médicas</a></li>
+                    <li class="nav-item"><a class="nav-link active" th:href="@{/templates/editor/ordenes/historial-ordenes}">Historial de Órdenes</a></li>
                     <li class="nav-item"><a class="nav-link" th:href="@{/logout}">Cerrar sesión</a></li>
                 </ul>
             </div>

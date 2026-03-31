@@ -19,26 +19,24 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
                                         Authentication authentication)
             throws IOException, ServletException {
 
-        String redirectUrl = "/"; // por defecto
+        String redirectUrl = "/login"; // por defecto
 
         for (GrantedAuthority auth : authentication.getAuthorities()) {
             String role = auth.getAuthority(); // ej: ROLE_Administrador
 
-            if (role.equals("ROLE_Administrador")) {
+            if (role.equals("ROLE_ADMIN")) {
                 redirectUrl = "/admin";
                 break;
-            } else if (role.equals("ROLE_Médico")) {
-                redirectUrl = "/medico";
+            } else if (role.equals("ROLE_EDITOR")) {
+                redirectUrl = "/editor";
                 break;
-            } else if (role.equals("ROLE_Autorizador")) {
-                redirectUrl = "/autorizador";
-                break;
-            } else if (role.equals("ROLE_Paciente")) {
-                redirectUrl = "/paciente";
+            } else if (role.equals("ROLE_SUPERVISOR")) {
+                redirectUrl = "/supervisor";
                 break;
             }
         }
 
         response.sendRedirect(redirectUrl);
+        System.out.println("holaaaa"+ authentication.getAuthorities());
     }
 }

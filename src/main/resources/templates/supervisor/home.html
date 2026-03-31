@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Módulo Autorizador | MASS</title>
+    <title>Módulo Supervisor | SGW</title>
 
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -99,7 +99,7 @@
             margin: 4rem 0;
         }
 
-        /* 🔹 Modal de términos */
+        /*  Modal de términos */
         #modalTerminos {
             position: fixed;
             top: 0; left: 0;
@@ -131,13 +131,13 @@
 
 <body>
 
-<!-- 🔹 Modal de Términos y Condiciones -->
+<!-- Modal de Términos y Condiciones -->
 <div id="modalTerminos">
     <div class="modal-content">
         <h4 class="mb-3">Términos y Condiciones de Uso</h4>
         <p class="mb-4">
-            Al usar <strong>MASS - Módulo Autorizador</strong>, aceptas nuestros
-            <a th:href="@{/terminos/autorizador}" target="_blank" style="color:#004aad; text-decoration:underline;">
+            Al usar <strong>SGW - Módulo Supervisor</strong>, aceptas nuestros
+            <a th:href="@{/terminos/supervisor}" target="_blank" style="color:#004aad; text-decoration:underline;">
                 Términos y Condiciones de servicio
             </a>.
         </p>
@@ -148,9 +148,8 @@
 <header>
     <nav class="navbar navbar-expand-md navbar-dark">
         <div class="container-fluid">
-            <a class="navbar-brand d-flex align-items-center" th:href="@{/autorizador/home}">
-                <img th:src="@{/images/logo.png}" alt="Logo MASS">
-                MASS - Módulo Autorizador
+            <a class="navbar-brand d-flex align-items-center" th:href="@{/templates/supervisor/home}">
+                SGW - Módulo Supervisor
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
                     aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -159,12 +158,12 @@
 
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="navbar-nav ms-auto mb-2 mb-md-0">
-                    <li class="nav-item"><a class="nav-link active" th:href="@{/autorizador/home}">Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/autorizador/pendientes}">Órdenes Pendientes</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/autorizador/aprobadas}">Órdenes Aprobadas</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/autorizador/rechazadas}">Órdenes Rechazadas</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/autorizador/historial}">Historial</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/autorizador/perfil}">Mi Perfil</a></li>
+                    <li class="nav-item"><a class="nav-link active" th:href="@{/templates/supervisor}">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/templates/supervisor/pendientes}">Revisiones Pendientes</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/templates/supervisor/aprobadas}">Documentos Aprobados</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/templates/supervisor/rechazadas}">Documentos Rechazados</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/templates/supervisor/historial}">Historial</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/templates/supervisor/perfil}">Mi Perfil</a></li>
                 </ul>
                 <form class="d-flex ms-md-3" th:action="@{/logout}" method="post">
                     <button class="btn btn-outline-light" type="submit">Cerrar sesión</button>
@@ -179,7 +178,7 @@
         <div class="carousel-inner">
             <div class="carousel-item active d-flex align-items-center justify-content-center">
                 <div class="carousel-caption text-center">
-                    <h1>Bienvenido al Módulo Autorizador</h1>
+                    <h1>Bienvenido al Módulo Supervisor</h1>
                     <p class="opacity-75">Seleccione un módulo para continuar con sus tareas.</p>
                 </div>
             </div>
@@ -189,16 +188,16 @@
     <div class="container marketing text-center">
         <div class="row justify-content-center">
             <div class="col-lg-4">
-                <h2 class="fw-normal">Autorización de Órdenes</h2>
-                <p>Revise, autorice o solicite correcciones a las órdenes.</p>
-                <p><a class="btn btn-secondary px-4" th:href="@{/autorizador/pendientes}">Ver detalles &raquo;</a></p>
+                <h2 class="fw-normal">Revisiones Pendientes</h2>
+                <p>Revise, autorice o solicite correcciones a los documentos.</p>
+                <p><a class="btn btn-secondary px-4" th:href="@{/templates/supervisor/pendientes}">Ver detalles &raquo;</a></p>
             </div>
 
-            <div class="col-lg-4">
+            <!--<div class="col-lg-4">
                 <h2 class="fw-normal">Historial de Autorizaciones</h2>
                 <p>Visualice el registro histórico de todas las órdenes procesadas.</p>
-                <p><a class="btn btn-secondary px-4" th:href="@{/autorizador/historial}">Ver detalles &raquo;</a></p>
-            </div>
+                <p><a class="btn btn-secondary px-4" th:href="@{/templates/supervisor/historial}">Ver detalles &raquo;</a></p>
+            </div>-->
         </div>
     </div>
 
@@ -206,15 +205,15 @@
 
     <footer class="container text-center">
         <p class="float-end"><a href="#">Volver arriba</a></p>
-        <p>&copy; 2025 MASS – Todos los Derechos reservados &middot;
+        <p>&copy; 2026 SGW – Todos los Derechos reservados &middot;
             <a href="#">Privacidad</a> &middot;
-            <a th:href="@{/terminos/autorizador}">Términos</a></p>
+            <a th:href="@{/terminos/supervisor}">Términos</a></p>
     </footer>
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- 🔹 Script funcional del modal -->
+<!--  Script funcional del modal -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const modal = document.getElementById("modalTerminos");
